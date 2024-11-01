@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '4.2.6'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+
+ext {
+    versions = [
+            serenityVersion: '4.1.0',
+            cucumberVersion: '7.20.1',
+            junitVersion   : '5.10.0',
+            assertjVersion : '3.26.3',
+            logbackVersion : '1.5.12',
+            slf4jVersion   : '2.0.15'
+    ]
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    // Serenity dependencias
+    implementation "net.serenity-bdd:serenity-core:${versions.serenityVersion}"
+    implementation "net.serenity-bdd:serenity-cucumber:${versions.serenityVersion}"
+    implementation "net.serenity-bdd:serenity-junit:${versions.serenityVersion}"
+
+    // Cucumber dependencias
+    implementation "io.cucumber:cucumber-java:${versions.cucumberVersion}"
+    implementation "io.cucumber:cucumber-junit:${versions.cucumberVersion}"
+
+    // JUnit dependencias
+    implementation platform("org.junit:junit-bom:${versions.junitVersion}")
+    implementation "org.junit.jupiter:junit-jupiter"
+
+    // Assertion dependencias
+    implementation "org.assertj:assertj-core:${versions.assertjVersion}"
+
+    // Logging dependencias
+    implementation "ch.qos.logback:logback-classic:${versions.logbackVersion}"
+    implementation "org.slf4j:slf4j-api:${versions.slf4jVersion}"
+}
+
+serenity {
+    outputDirectory = file("target/site/serenity-report")
+}
+
+tasks {
+
+    clean {
+        delete fileTree("target/site/serenity-report")
+    }
+
+    test {
+        systemProperty 'webdriver.driver', 'chrome'
+        systemProperty 'serenity.outputDirectory', "target/site/serenity-report"
+
+        ignoreFailures = true
+        finalizedBy aggregate
+    }
+
+}
+
