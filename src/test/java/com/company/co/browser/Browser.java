@@ -1,5 +1,6 @@
 package com.company.co.browser;
 
+import net.serenitybdd.annotations.Step;
 import net.serenitybdd.annotations.Steps;
 import net.serenitybdd.core.pages.PageObject;
 import net.thucydides.model.environment.SystemEnvironmentVariables;
@@ -11,6 +12,7 @@ public class Browser {
     @Steps(shared = true)
     PageObject pageObject;
 
+    @Step("Navega al sitio web")
     public void navigateTo() {
         EnvironmentVariables env = SystemEnvironmentVariables.createEnvironmentVariables();
         final String URL = env.getProperty("base.url");
